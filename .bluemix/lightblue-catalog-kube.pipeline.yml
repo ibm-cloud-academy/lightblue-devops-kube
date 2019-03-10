@@ -33,9 +33,9 @@ stages:
       echo "GIT_COMMIT=${GIT_COMMIT}"
 
       # Building using gradle and Java8
-      export JAVA_HOME=~/java8
-      ./gradlew build
-      ./gradlew docker
+      # export JAVA_HOME=~/java8
+      # ./gradlew build
+      # ./gradlew docker
 
       IMAGE_TAG=${BUILD_NUMBER}
       echo "=========================================================="
