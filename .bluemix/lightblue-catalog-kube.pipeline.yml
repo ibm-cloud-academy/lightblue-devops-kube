@@ -45,7 +45,16 @@ stages:
         ibmcloud cr image-rm `ibmcloud cr image-list -q | grep "catalog";`
       fi
 
+      if [ `ibmcloud cr image-list -q | grep "customer" | wc -l` -eq 1 ]; then
+        ibmcloud cr image-rm `ibmcloud cr image-list -q | grep "customer";`
+      fi
       
+      if [ `ibmcloud cr image-list -q | grep "web" | wc -l` -eq 1 ]; then
+        ibmcloud cr image-rm `ibmcloud cr image-list -q | grep "web";`
+      fi
+      
+      sleep 10
+
       cd docker
       ibmcloud cr build -t ${REGISTRY_URL}/${REGISTRY_NAMESPACE}/${IMAGE_NAME}:${IMAGE_TAG} .
 
