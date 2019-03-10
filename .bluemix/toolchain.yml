@@ -9,7 +9,7 @@ template:
     - pipeline-lightblue-web-kube
     - pipeline-lightblue-customer-kube
     - pipeline-lightblue-catalog-kube
-    -form
+    - form
   info:
     git url: >-
       [https://github.com/ibm-cloud-academy/lightblue-devops-kube](https://github.com/ibm-cloud-academy/lightblue-devops-kube)
