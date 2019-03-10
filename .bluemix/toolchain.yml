@@ -9,6 +9,7 @@ template:
     - pipeline-lightblue-web-kube
     - pipeline-lightblue-customer-kube
     - pipeline-lightblue-catalog-kube
+    - form
   info:
     git url: >-
       [https://github.com/ibm-cloud-academy/lightblue-devops-kube](https://github.com/ibm-cloud-academy/lightblue-devops-kube)
@@ -73,7 +74,7 @@ services:
           PROD_CLUSTER_NAMESPACE: '{{form.pipeline.parameters.prod-cluster-namespace}}'
         execute: true
 
-   pipeline-lightblue-customer-kube:
+  pipeline-lightblue-customer-kube:
     service_id: pipeline
     parameters:
       services:
@@ -116,7 +117,7 @@ services:
           PROD_CLUSTER_NAME: '{{form.pipeline.parameters.prod-cluster-name}}'
           PROD_CLUSTER_NAMESPACE: '{{form.pipeline.parameters.prod-cluster-namespace}}'
         execute: true
- 
+
   webide:
     service_id: orion
 form:
