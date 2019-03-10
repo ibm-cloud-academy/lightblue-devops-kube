@@ -40,6 +40,11 @@ stages:
       IMAGE_TAG=${BUILD_NUMBER}
       echo "=========================================================="
       echo -e "BUILDING CONTAINER IMAGE: ${IMAGE_NAME}:${IMAGE_TAG}"
+
+      if [ `ibmcloud cr image-list -q | grep "catalog" | wc -l` -eq 1 ]; then
+        ibmcloud cr image-rm `ibmcloud cr image-list -q | grep "catalog";`
+      fi
+
       
       cd docker
       ibmcloud cr build -t ${REGISTRY_URL}/${REGISTRY_NAMESPACE}/${IMAGE_NAME}:${IMAGE_TAG} .
