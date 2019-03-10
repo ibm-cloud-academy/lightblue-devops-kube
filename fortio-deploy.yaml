@@ -1,0 +1,35 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: fortio-deploy
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: fortio
+    spec:
+      containers:
+      - name: fortio
+        image: istio/fortio:latest_release
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          name: http-fortio
+        - containerPort: 8079
+          name: grpc-ping
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fortio-service
+  labels:
+    app: fortio
+spec:
+  type: NodePort
+  selector:
+    app: fortio
+  ports:
+   - protocol: TCP
+     port: 8080
+     nodePort: 30101
