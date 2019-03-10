@@ -1,0 +1,56 @@
+---
+stages:
+- name: BUILD 
+  inputs:
+  - service: ${REPO}
+    type: git
+    branch: initial-cf
+  triggers:
+  - type: commit
+  jobs:
+  - name: Build Catalog Microservice jar file
+    type: builder
+    artifact_dir: ''
+    build_type: gradle
+    script: |-
+      #!/bin/bash
+      # The default Gradle version is {0}
+      # To use Gradle {0}, uncomment the following line:
+      #export PATH="$GRADLE2_HOME/bin:$PATH"
+      export JAVA_HOME=$JAVA8_HOME
+      gradle build -x test
+- name: DEPLOY
+  inputs:
+  - type: job
+    stage: BUILD
+    job: Build Catalog Microservice jar file
+  triggers:
+  - type: stage
+  properties:
+  - name: SUFFIX
+    value: ${SUFFIX}
+    type: text
+  - name: APP_NAME
+    value: lightblue-catalog-${SUFFIX}
+    type: text
+  jobs:
+  - name: Deploy Catalog Microservice
+    type: deployer
+    deploy_permission: DEV_IN_SPACE
+    target:
+      region_id: ${REGION_ID}
+      organization: ${CF_ORGANIZATION}
+      space: ${CF_SPACE}
+      application: ${CF_APP}
+      api_key: ${API_KEY}
+    PORT: ${PORT}
+    SUFFIX: ${SUFFIX}
+    script: |-
+        #!/bin/sh
+        echo "Deploying $APP_NAME using $SUFFIX"
+        cf push ${APP_NAME} -n ${APP_NAME} -m 256M
+hooks:
+- enabled: true
+  label: null
+  ssl_enabled: false
+  url: http://lms-api/v1/messaging/webhook/publish

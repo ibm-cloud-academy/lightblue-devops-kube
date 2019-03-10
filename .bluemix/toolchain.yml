@@ -1,0 +1,129 @@
+version: '2'
+template:
+  name: "LightBlueCompute Toolchain for kubernetes"
+  description: "LightBlueCompute Spring boot microservices application"
+  required:
+    - git-lightblue-web-kube
+    - git-lightblue-customer-kube
+    - git-lightblue-catalog-kube
+    - pipeline-lightblue-web-kube
+    - pipeline-lightblue-customer-kube
+    - pipeline-lightblue-catalog-kube
+    -form
+  info:
+    git url: >-
+      [https://github.com/ibm-cloud-academy/lightblue-devops-kube](https://github.com/ibm-cloud-academy/lightblue-devops-kube)
+    git branch: >-
+      [master](https://github.com/ibm-cloud-academy/lightblue-devops-kube/tree/master)
+toolchain:
+  name: 'lightbluecompute-devops-kube-{{timestamp}}'
+  template:
+    getting_started: "Load template"
+services:
+
+  # Github repos
+
+  git-lightblue-web-kube:
+    service_id: githubpublic
+    parameters:
+      repo_url: "https://github.com/ibm-cloud-academy/lightblue-web-kube"
+      repo_name: "lightblue-web-kube-{{timestamp}}"
+      type: clone
+      has_issues: true
+      enable_traceability: true
+
+  git-lightblue-customer-kube:
+      service_id: githubpublic
+      parameters:
+        repo_url: "https://github.com/ibm-cloud-academy/lightblue-customer-kube"
+        repo_name: "lightblue-customer-kube-{{timestamp}}"
+        type: clone
+        has_issues: true
+        enable_traceability: true
+
+  git-lightblue-catalog-kube:
+      service_id: githubpublic
+      parameters:
+        repo_url: "https://github.com/ibm-cloud-academy/lightblue-catalog-kube"
+        repo_name: "lightblue-catalog-kube-{{timestamp}}"
+        type: clone
+        has_issues: true
+        enable_traceability: true
+
+  # Pipelines
+
+  pipeline-lightblue-web-kube:
+    service_id: pipeline
+    parameters:
+      services:
+        - git-lightblue-web-kube
+      name: "lightblue-web-kube"
+      ui-pipeline: true
+      configuration:
+        content:
+          $text: lightblue-web-kube.pipeline.yml
+        env:
+          GIT_REPO: "git-lightblue-web-kube"
+          # CF_APP_NAME: '{{form.pipeline.parameters.app-name}}'
+          CF_APP_NAME: "lightblue-web-kube"
+          REGISTRY_REGION_ID: '{{form.pipeline.parameters.registry-region}}'
+          REGISTRY_NAMESPACE: '{{form.pipeline.parameters.registry-namespace}}'
+          API_KEY: '{{form.pipeline.parameters.api-key}}'
+          PROD_REGION_ID: '{{form.pipeline.parameters.prod-region}}'
+          PROD_CLUSTER_NAME: '{{form.pipeline.parameters.prod-cluster-name}}'
+          PROD_CLUSTER_NAMESPACE: '{{form.pipeline.parameters.prod-cluster-namespace}}'
+        execute: true
+
+   pipeline-lightblue-customer-kube:
+    service_id: pipeline
+    parameters:
+      services:
+        - git-lightblue-customer-kube
+      name: "lightblue-customer-kube"
+      ui-pipeline: true
+      configuration:
+        content:
+          $text: lightblue-customer-kube.pipeline.yml
+        env:
+          GIT_REPO: "git-lightblue-customer-kube"
+          # CF_APP_NAME: '{{form.pipeline.parameters.app-name}}'
+          CF_APP_NAME: "lightblue-customer-kube"
+          REGISTRY_REGION_ID: '{{form.pipeline.parameters.registry-region}}'
+          REGISTRY_NAMESPACE: '{{form.pipeline.parameters.registry-namespace}}'
+          API_KEY: '{{form.pipeline.parameters.api-key}}'
+          PROD_REGION_ID: '{{form.pipeline.parameters.prod-region}}'
+          PROD_CLUSTER_NAME: '{{form.pipeline.parameters.prod-cluster-name}}'
+          PROD_CLUSTER_NAMESPACE: '{{form.pipeline.parameters.prod-cluster-namespace}}'
+        execute: true
+
+  pipeline-lightblue-catalog-kube:
+    service_id: pipeline
+    parameters:
+      services:
+        - git-lightblue-catalog-kube
+      name: "lightblue-catalog-kube"
+      ui-pipeline: true
+      configuration:
+        content:
+          $text: lightblue-catalog-kube.pipeline.yml
+        env:
+          GIT_REPO: "git-lightblue-catalog-kube"
+          # CF_APP_NAME: '{{form.pipeline.parameters.app-name}}'
+          CF_APP_NAME: "lightblue-catalog-kube"
+          REGISTRY_REGION_ID: '{{form.pipeline.parameters.registry-region}}'
+          REGISTRY_NAMESPACE: '{{form.pipeline.parameters.registry-namespace}}'
+          API_KEY: '{{form.pipeline.parameters.api-key}}'
+          PROD_REGION_ID: '{{form.pipeline.parameters.prod-region}}'
+          PROD_CLUSTER_NAME: '{{form.pipeline.parameters.prod-cluster-name}}'
+          PROD_CLUSTER_NAMESPACE: '{{form.pipeline.parameters.prod-cluster-namespace}}'
+        execute: true
+ 
+  webide:
+    service_id: orion
+form:
+  pipeline:
+    parameters:
+    # app-name: '{{services.repo.parameters.repo_name}}'
+      prod-cluster-namespace: "default"
+    schema:
+      $ref: deploy.json
