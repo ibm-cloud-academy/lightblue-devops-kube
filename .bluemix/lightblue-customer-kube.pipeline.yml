@@ -41,13 +41,11 @@ stages:
       echo "=========================================================="
       echo -e "BUILDING CONTAINER IMAGE: ${IMAGE_NAME}:${IMAGE_TAG}"
 
-      if [ `ibmcloud cr image-list -q | grep "catalog" | wc -l` -eq 1 ]; then
-        ibmcloud cr image-rm `ibmcloud cr image-list -q | grep "catalog";`
-      fi
-
       if [ `ibmcloud cr image-list -q | grep "customer" | wc -l` -eq 1 ]; then
         ibmcloud cr image-rm `ibmcloud cr image-list -q | grep "customer";`
       fi
+
+      sleep 5
       
       if [ `ibmcloud cr image-list -q | grep "web" | wc -l` -eq 1 ]; then
         ibmcloud cr image-rm `ibmcloud cr image-list -q | grep "web";`
